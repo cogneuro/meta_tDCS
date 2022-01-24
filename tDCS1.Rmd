@@ -1,0 +1,549 @@
+---
+title: "tDCS1"
+author: "cn"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapse: false
+      smooth_scroll: false
+    number_sections: true
+    theme: cosmo 
+    highlight: haddock
+    code_folding: hide
+subtitle: Effects of tDCS on metacognition in perceptual judgment
+mainfont: Noto Sans CJK KR
+---
+
+```{css, echo=FALSE}
+pre code, pre, code {
+  white-space: pre !important;
+  overflow-x: scroll !important;
+  word-break: keep-all !important;
+  word-wrap: initial !important;
+}
+```
+
+```{r setup, message=FALSE}
+set.seed(12345) # for reproducibility
+
+pacman::p_load(tidyverse, knitr, psych, ggpubr)
+pacman::p_load(afex, emmeans)
+pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
+
+source('HmiscHelper.R')
+# 210615. Rmisc::summarySEwithin은 mean of normalized를 리턴. 
+# 따라서 패키지를 쓰지 않고 위 R파일에 정의된, 같은 이름의 함수를 쓴다. 
+# Rmisc::summarySEwithin과 달리 정규화하지 않은 평균도 제공한다. 
+# dplyr와 충돌하지 않도록 plyr 함수들을 직접 부르도록 수정하였다.
+# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+# See also: https://github.com/ccoolbaugh/FrontPhysiol_Coolbaugh_Cooling_Protocol
+
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # suppress warning in regards to regrouping 
+set_sum_contrasts() # see Singmann & Kellen (2020)
+
+klippy::klippy()
+```
+
+```{r functions}
+## Plots
+
+# stat summary plot to 25% quartile and 75% quartile: https://bit.ly/3iFpV07
+single_hori_plot <- function(df, X, xMin, xMax, xBy, xLab){
+  df %>% ggplot(aes(x=1, y=X)) +
+    geom_violin(width = .9, trim = TRUE) +
+    ggbeeswarm::geom_quasirandom(dodge.width = 0.5, color = "blue", size = 3,
+                                 alpha = 0.2, show.legend = FALSE) +
+    # stat_summary(fun.data = "mean_cl_boot", color = "darkred", size = 1) +
+    geom_pointrange(stat = "summary",
+                    fun.min = function(z) {quantile(z,0.25)},
+                    fun.max = function(z) {quantile(z,0.75)},
+                    fun = median, color = "darkred", size = 1) +
+    scale_y_continuous(breaks=seq(xMin,xMax,by=xBy)) +
+    coord_flip(ylim = c(xMin, xMax), clip = "on") +
+    labs(y = xLab) +
+    theme_bw(base_size = 18) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.title.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          aspect.ratio = .3)
+}
+
+plot2x2spaghetti <- function(df, ylabel, yrange){
+  df.w <- df %>% pivot_wider(id_cols = c('Group', 'SID'),
+                             names_from = 'Session', values_from = V)
+  
+  p <- ggplot(data=df, aes(x = Group, y = V, fill = Session)) +
+    geom_violin(width = 0.5, trim = TRUE) +
+    geom_point(position=position_dodge(0.5), 
+               color="gray80", size=1.8, show.legend = FALSE) +
+    geom_segment(data=filter(df.w, Group=="Real"), inherit.aes = FALSE,
+                 aes(x=1-.12, y=filter(df.w, Group=="Real")$Pre,
+                     xend=1+.12, yend=filter(df.w, Group=="Real")$Post),
+                 color="gray80") +
+    geom_segment(data=filter(df.w, Group=="Sham"), inherit.aes = FALSE,
+                 aes(x=2-.12, y=filter(df.w, Group=="Sham")$Pre,
+                     xend=2+.12, yend=filter(df.w, Group=="Sham")$Post),
+                 color="gray80") +
+    geom_pointrange(data=summarySEwithin(data = df, measurevar = "V", idvar = "SID",
+                                         withinvars = "Session", betweenvars = "Group"),
+                    aes(x = Group, ymin = V-ci, ymax = V+ci, group = Session),
+                    position = position_dodge(0.5), color = "darkred", size = 1, show.legend = FALSE) +
+    scale_fill_manual(values=c("#E69F00", "#56B4E9"),
+                      labels=c("Pre", "Post")) +
+    labs(x = "Group",
+         y = ylabel,
+         fill='Session') +
+    theme_bw(base_size = 18) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+  
+  if(missing(yrange)){
+    p
+  } else {
+    p + coord_cartesian(ylim = yrange, clip = "on")
+  }  
+}
+
+
+## Excluding Ss
+rm_subject <- function(df, rx){
+  for (i in rx){
+    df <- df %>% filter(SID != i) %>% droplevels()
+  }
+  cat(sprintf('%d removed & %d left',
+              length(unique(rx)),
+              length(unique(df$SID))))
+  return(df)
+}
+```
+
+
+# Data Inspection
+
+가장 먼저 가외치를 결정한다.
+
+## Raw Data
+
+```{r, collapse=TRUE}
+d <- read_csv('metaRDMmain.csv', show_col_types = FALSE) 
+
+d$Group <- factor(d$Group, levels=c(1,2), labels=c("Real","Sham"))
+d$Session <- factor(d$Session, levels=c(1,2), labels=c("Pre","Post"))
+d$TargLoc <- factor(d$TargLoc, levels=c(1,2), labels=c("L","R"))
+
+unique(d$Resp)    # 0_no resp,
+unique(d$Correct)
+unique(d$Conf)    # 0, 6 = no response or multiple keys
+```
+
+
+### % No Response
+
+반응이 입력되지 않은 시행의 비율을 계산하였다.
+
+```{r excl_plot, collapse = TRUE, fig.height = 2}
+# % excluded trials: 지각반응과 확신도 무반응/잘못된 버튼
+d %>% filter(Session == 'Pre') %>% 
+  mutate(X = ifelse(Resp==0, 1, ifelse((Conf==0)|(Conf==5), 1, 0))) %>% 
+  group_by(SID) %>% 
+  summarise(Excl = mean(X)*100) %>% 
+  ungroup() %>% 
+  print(n = Inf) # Note #26
+
+d26 <- d %>% filter(SID == 26)
+table(d26$Resp, d26$Session) # pre에서 약 50% 무반응
+
+F1 <- d %>% filter(Session == 'Pre') %>% 
+  mutate(X = ifelse(Resp==0, 1, ifelse((Conf==0)|(Conf==5), 1, 0))) %>% 
+  group_by(SID) %>% 
+  summarise(Excl = mean(X)*100) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$Excl, 0, 100, 20, " [Pre] % Excluded")
+
+F2 <- d %>% filter(Session == 'Post') %>% 
+  mutate(X = ifelse(Resp==0, 1, ifelse((Conf==0)|(Conf==5), 1, 0))) %>% 
+  group_by(SID) %>% 
+  summarise(Excl = mean(X)*100) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$Excl, 0, 100, 20, "[Post] % Excluded")
+
+F1 + F2
+```
+
+26번 참가자는 `pre-tDCS` 시행 중 절반에서 시각판단 반응을 입력하지 않았다.
+
+
+<br><br>
+
+### Mean Confidence
+
+```{r conf_plot, fig.height = 2}
+F1 <- d %>% filter(Session == 'Pre') %>% 
+  filter(Resp > 0, Conf > 0, Conf < 5) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Conf)) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$M, 1, 4, 0.5, "[Pre] Mean Confidence")
+
+F2 <- d %>% filter(Session == 'Pre') %>% 
+  filter(Resp > 0, Conf > 0, Conf < 5) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Conf)) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$M, 1, 4, 0.5, "[Post] Mean Confidence")
+
+F1 + F2
+```
+
+<br><br>
+
+### Perceptual Accuracy
+
+```{r acc_plot, fig.height = 2}
+F1 <- d %>% filter(Session == 'Pre') %>% 
+  filter(Resp > 0) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Correct)) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$M, 0.5, 1, .1, "[Pre] Perceptual Accuracy")
+
+F2 <- d %>% filter(Session == 'Post') %>% 
+  filter(Resp > 0) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Correct)) %>% 
+  ungroup() %>% 
+  single_hori_plot(.$M, 0.5, 1, .1, "[Post] Perceptual Accuracy")
+
+F1 + F2
+```
+
+<br><br>
+
+### Motion Coherence
+
+```{r coh_plot, fig.height = 2}
+F1 <- d %>% filter(Session == 'Pre') %>% 
+  filter(Resp > 0) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Difficulty)) %>% 
+  ungroup() %>%
+  single_hori_plot(.$M, 0, 1, .2, "[Pre] Motion Coherence")
+
+F2 <- d %>% filter(Session == 'Post') %>% 
+  filter(Resp > 0) %>% 
+  group_by(SID) %>% 
+  summarise(M = mean(Difficulty)) %>% 
+  ungroup() %>%
+  single_hori_plot(.$M, 0, 1, .2, "[Post] Motion Coherence")
+
+F1 + F2
+```
+
+<br><br>
+
+
+## Matlab MLE Data
+
+[Maniscalco](http://www.columbia.edu/~bsm2105/type2sdt/)의 코드를 사용하여 $d'$, meta-$d'$, M-ratio(meta-$d'/d'$)를 계산하였다. `trials2counts()` 함수와 `fit_meta_d_MLE()` 함수에 입력한 값들은 아래 코드와 같았다. 4점 척도에서 빈도가 0인 경우가 많아서,  `fit_meta_d_MLE()` 도움말을 따라 2점 척도로 변환하였다. 여전히 빈도가 0인 점수들이 있으므로, [작은 수](https://bit.ly/3i3DJkE)(adj_f = 1/(length(nR_S1)) = 0.25)를 [모든 값](https://bit.ly/3uwHp0U)에 더해주었다
+
+```{octave, eval=FALSE}
+% 원자료: metaRDMmain.csv
+
+stimID = TargLoc - 1;
+response = Resp - 1;
+rating = Conf;
+nRatings = 2;
+cellpad = 1; # 확신도 점수 빈도 = 0인 사례를 보정.
+
+[nR_S1, nR_S2] = trials2counts(stimID, response, rating, nRatings, cellpad);
+
+fit = fit_meta_d_MLE(nR_S1, nR_S2);
+
+% 출력자료: tDCS1_estimated.csv
+```
+
+
+```{r, collapse=TRUE}
+mtb2 <- read_csv('tDCS1_estimated_2scale.csv') %>% filter(SID!= 26)
+
+selectMtb <- function(mtb, V1, V2){
+  df <- mtb %>% select(Group, SID, all_of(V1), all_of(V2)) %>% 
+    pivot_longer(cols = c(all_of(V1), all_of(V2)), names_to = "Session", values_to = "V") %>% 
+    mutate(Group = fct_recode(as_factor(Group), "Real" = '1', "Sham" = '2')) %>% 
+    mutate(Session = fct_recode(Session, "Pre" = V1, "Post" = V2))
+  return(df)
+}
+```
+
+
+### Type-1 Accuracy: d'
+
+```{r dprime_plot, collapse = TRUE, fig.height = 2}
+# d'
+td <- mtb2 %>% selectMtb('p1da', 'p2da')
+
+F1 <- td %>% filter(Session == 'Pre') %>% 
+  single_hori_plot(.$V, 0, 2, .5, expression(paste("[Pre] ", italic(d), "'")))
+F2 <- td %>% filter(Session == 'Post') %>% 
+  single_hori_plot(.$V, 0, 2, .5, expression(paste("[Post] ", italic(d), "'")))
+F1 + F2
+```
+
+<br><br>
+
+### Type-2 Accuracy: Meta-d'
+
+```{r metad_plot, collapse = TRUE, fig.height = 2}
+# meta-d'
+tm <- mtb2 %>% selectMtb('p1meta_da', 'p2meta_da')
+
+F1 <- tm %>% filter(Session == 'Pre') %>% 
+  single_hori_plot(.$V, -1, 3, 1, expression(paste("[Pre] meta-", italic(d), "'")))
+F2 <- tm %>% filter(Session == 'Post') %>% 
+  single_hori_plot(.$V, -1, 3, 1, expression(paste("[Post] meta-", italic(d), "'")))
+F1 + F2
+```
+
+<br><br>
+
+### M-Ratio (Meta-d'/d')
+
+`Post-session`에서 $\mu \pm3SD$(빨간 점선)보다 큰 값을 보인 8번 참가자를 가외치로 판정하였다. 
+
+```{r mratio_plot, collapse = TRUE, fig.height = 2}
+# meta-ratio
+tr <- mtb2 %>% selectMtb('p1M_ratio', 'p2M_ratio')
+
+tr %>% filter(Session == 'Pre') %>% 
+  mutate(lbound = mean(.$V) - 3*sd(.$V),
+         ubound = mean(.$V) + 3*sd(.$V)) %>%
+  mutate(Outlier = (V < lbound)|(V > ubound)) %>%
+  filter(Outlier == TRUE) %>%
+  droplevels()
+
+tr %>% filter(Session == 'Post') %>% 
+  mutate(lbound = mean(.$V) - 3*sd(.$V),
+         ubound = mean(.$V) + 3*sd(.$V)) %>%
+  mutate(Outlier = (V < lbound)|(V > ubound)) %>%
+  filter(Outlier == TRUE) %>%
+  droplevels()
+
+F1 <- tr %>% filter(Session == 'Pre') %>% 
+  single_hori_plot(.$V, -1, 3, 1, '[Pre] M-Ratio')
+F2 <- tr %>% filter(Session == 'Post') %>% 
+  single_hori_plot(.$V, -1, 3, 1, '[Post] M-Ratio') +
+  geom_hline(yintercept=2.96, linetype='dashed', color='red', size=0.5)
+F1 + F2
+```
+
+<br><br>
+
+
+## Subject Exclusion
+
+참가자 26번과 8번을 최종분석에서 제외한다(`Real` 집단 16명, `Sham` 집단 14명).
+
+```{r excl_s, collapse = TRUE}
+d2 <- d %>% rm_subject(c(8, 26)) %>% filter(Resp > 0, Conf > 0, Conf < 5)
+mtb2 <- mtb2 %>% rm_subject(c(8, 26))
+```
+
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# Type-1 Accuracy
+
+모든 조건의 정확도는 대체로 1-up-2-down 계단법의 기대값인 70.7% 가까이에서 유지되었다([Levitt, 1971](https://asa.scitation.org/doi/abs/10.1121/1.1912375)).
+
+```{r}
+accuracy <- d2 %>% 
+	group_by(Group, Session, SID) %>% 
+	summarize(V = mean(Correct)*100) %>% 
+	ungroup() 
+
+accuracy %>% 
+	group_by(Group, Session) %>% 
+	summarize(Accuracy = mean(V)) %>% 
+	ungroup() %>% 
+	pivot_wider(names_from = 'Session', values_from = 'Accuracy') %>% 
+	kable(digits = 4, caption = 'Mean Type-1 Accuracy')
+
+accuracy %>% 
+	aov_ez(id = 'SID', dv = 'V',
+				 between = 'Group', within = 'Session') %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'Type-1 Accuracy ANOVA')
+
+plot2x2spaghetti(accuracy, "Type-1 Accuracy")
+```
+
+
+<br><br>
+
+
+# Motion Coherence
+
+계단법에 의해 정확도가 고정되었으므로 tDCS가 지각판단에 영향을 주었다면, 그 효과는 점 운동의 일관성 수준(coherence levels)에 반영되었을 것이다. 그러나 일관성 수준의 조건간 차이는 주목할 만큼 크지 않았다
+
+```{r}
+coherence <- d2 %>% 
+	group_by(Group, Session, SID) %>% 
+	summarize(V = mean(Difficulty)) %>% 
+	ungroup() 
+
+coherence %>% 
+	group_by(Group, Session) %>% 
+	summarize(Coherence = mean(V)) %>% 
+	ungroup() %>% 
+	pivot_wider(names_from = 'Session', values_from = 'Coherence') %>% 
+	kable(digits = 4, caption = 'Mean Motion Coherence')
+
+coherence %>%  
+	aov_ez(id = 'SID', dv = 'V',
+				 between = 'Group', within = 'Session') %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'Mean Motion Coherence ANOVA')
+
+plot2x2spaghetti(coherence, "Coherence")
+```
+
+
+<br><br>
+
+
+# Confidence
+
+tDCS가 확신 수준에 영향을 끼쳤는지 확인하기 위해 **평균 확신도** 점수를 분석하였다. 분석 결과, 눈에 띄는 효과는 없었다. (참고: 다른 지표들에 비해, 각 참가자의 평균 확신도 점수는 일정하게 유지되는 것으로 보인다. 신뢰구간이 작다.) 
+
+```{r}
+confidence <- d2 %>% group_by(Group, Session, SID) %>% 
+  summarise(V = mean(Conf)) %>% 
+  ungroup()
+
+confidence %>% 
+	group_by(Group, Session) %>% 
+	summarize(Confidence = mean(V)) %>% 
+	ungroup() %>% 
+	pivot_wider(names_from = 'Session', values_from = 'Confidence') %>% 
+	kable(digits = 4, caption = 'Mean Confidence')
+
+coherence %>%  
+	aov_ez(id = 'SID', dv = 'V',
+				 between = 'Group', within = 'Session') %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'Mean Confidence ANOVA')
+
+plot2x2spaghetti(confidence, "Confidence", c(1,4))
+```
+
+
+<br><br>
+
+# d'
+
+$d'$은 tDCS 영향을 전혀 받지 않았다. 
+
+```{r}
+td <- mtb2 %>% selectMtb('p1da', 'p2da')
+
+td %>% group_by(Group, Session) %>% 
+  summarise(Sensitivity = mean(V)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = 'Session', values_from = 'Sensitivity') %>% 
+  kable(digits = 4, caption = 'Mean Sensitivity')
+
+td %>% aov_ez(id = 'SID', dv = 'V',
+							between = 'Group', within = 'Session') %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'Sensitivity ANOVA')
+
+td %>% plot2x2spaghetti(ylabel = expression(paste(italic(d), "'")))
+```
+
+참가자들의 $d'$이 두 세션에서 일정하게 유지되지 않았다는 점이 주목할만 하다. 본 실험 과제가 $d'$을 안정적으로 추정하지 못한다는 것을 알 수 있다.
+
+<br><br>
+
+
+# Meta-d'
+
+Meta-$d'$도 tDCS 영향을 받지 않았다. 
+
+```{r}
+## meta-d'
+tm <- mtb2 %>% selectMtb('p1meta_da', 'p2meta_da')
+
+tm %>% group_by(Group, Session) %>% 
+  summarise(MetaSensitivity = mean(V)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = 'Session', values_from = 'MetaSensitivity') %>% 
+  kable(digits = 4, caption = 'Mean Meta-Sensitivity')
+
+
+tm %>% aov_ez(id = 'SID', dv = 'V', 
+							between = 'Group', within = 'Session') %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'Meta-Sensitivity ANOVA')
+
+tm %>% plot2x2spaghetti(ylabel = expression(paste("Meta-", italic(d), "'")))
+```
+
+$d'$에서와 마찬가지로, 참가자들의 meta-$d'$이 두 세션에서 일정하게 유지되지 않았다.
+
+<br><br>
+
+
+# M-Ratio (Meta-d'/d')
+
+메타인지 효율성 지표에서 이원 상호작용이 유의미하였다. `Real` 집단의 메타인지 효율성이 유의미하게 향상되었다. 
+
+
+```{r}
+## Ratio
+tr <- mtb2 %>% selectMtb('p1M_ratio', 'p2M_ratio')
+
+tr %>% group_by(Group, Session) %>% 
+  summarise(Mratio = mean(V)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = 'Session', values_from = 'Mratio') %>% 
+  kable(digits = 4, caption = 'Mean M-Ratio')
+
+tmp <- tr %>% aov_ez(id = 'SID', dv = 'V', 
+                     between = 'Group', within = 'Session') 
+
+tmp %>% 
+	anova(es="pes") %>% 
+	kable(digits = 4, caption = 'M-Ratio ANOVA')
+
+tmp2 <- tmp %>% emmeans::emmeans(pairwise ~ Session | Group)
+tmp2$contrasts %>% kable(digits = 4, caption = 'Post hoc')
+
+tr %>% plot2x2spaghetti(ylabel = expression(paste("meta-", italic(d), "/", italic(d), "'")))
+```
+
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# Session Info
+```{r sinfo, collapse=TRUE}
+sessionInfo()
+```
+

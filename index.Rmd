@@ -439,7 +439,7 @@ confidence %>%
 	pivot_wider(names_from = 'Session', values_from = 'Confidence') %>% 
 	kable(digits = 4, caption = 'Mean Confidence')
 
-coherence %>%  
+confidence %>%  
 	aov_ez(id = 'SID', dv = 'V',
 				 between = 'Group', within = 'Session') %>% 
 	anova(es="pes") %>% 
@@ -546,4 +546,5 @@ tr %>% plot2x2spaghetti(ylabel = expression(paste("meta-", italic(d), "/", itali
 ```{r sinfo, collapse=TRUE}
 sessionInfo()
 ```
+
 

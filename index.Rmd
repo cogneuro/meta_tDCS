@@ -31,7 +31,7 @@ set.seed(12345) # for reproducibility
 
 pacman::p_load(tidyverse, knitr, psych, ggpubr)
 pacman::p_load(afex, emmeans)
-pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
+pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy", "mitchelloharawild/icons")
 
 source('HmiscHelper.R')
 # 210615. Rmisc::summarySEwithin은 mean of normalized를 리턴. 
@@ -548,3 +548,5 @@ sessionInfo()
 ```
 
 
+***
+[[View on Github `r icon_style(fontawesome("github-alt", style = "brands"), scale = 4, fill = "#56B4E9")`](https://github.com/cogneuro/meta_tDCS)]{style="float:right"}

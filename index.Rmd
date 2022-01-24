@@ -1,6 +1,6 @@
 ---
-title: "Prefrontal tDCS Enhances Visual Metacognition"
-author: "권다솜, 홍민석, 엄소용, 이도준"
+title: "tDCS1"
+author: "Kwon, Hong, Eom, & Yi (2022)"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -13,7 +13,7 @@ output:
     theme: cosmo 
     highlight: haddock
     code_folding: hide
-subtitle: 한국심리학회지:인지및생물(2022)
+subtitle: Prefrontal tDCS Enhances Visual Metacognition
 mainfont: Noto Sans CJK KR
 ---
 

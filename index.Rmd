@@ -30,7 +30,7 @@ pre code, pre, code {
 set.seed(12345) # for reproducibility
 
 pacman::p_load(tidyverse, knitr, psych, ggpubr)
-pacman::p_load(afex, emmeans)
+pacman::p_load(afex, emmeans, rstatix)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy", "mitchelloharawild/icons")
 
 source('HmiscHelper.R')
@@ -532,6 +532,67 @@ tmp2$contrasts %>% kable(digits = 4, caption = 'Post hoc')
 
 tr %>% plot2x2spaghetti(ylabel = expression(paste("meta-", italic(d), "/", italic(d), "'")))
 ```
+
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+
+# Demographic Info
+
+두 명을 제외하고 남은 참가자 30명의 집단별 연령과 성비를 분석한다. 
+
+```{r, collapse=TRUE}
+demo <- read.csv('tDCS1_demographic.csv', header = TRUE)
+head(demo)
+
+demo <- demo %>% filter(Excluded == 0)
+table(demo$Group, demo$Sex) %>% 
+  kable(caption = 'Group x Sex')
+
+demo %>% group_by(Group) %>% 
+  summarise(M = mean(Age),
+            SD = sd(Age)) %>% 
+  ungroup() %>% 
+  kable(digits = 2, caption = 'Group x Age')
+```
+
+
+$\chi^2$-검정에서 셀이 네 개이면 *p*가 작게 나와서 1종오류 가능성 높아지므로, 예이츠의 연속성 보정이 필요하다(`correct = TRUE`). 
+
+```{r}
+# 카이제곱 검정
+t <- table(demo$Group, demo$Sex)
+chisq.test(t, correct = TRUE)
+```
+
+성별비의 집단차는 유의하지 않았다.
+
+
+```{r}
+t.test(data = demo,
+       Age ~ Group, 
+       alternative = "two.sided",
+       paired = FALSE,
+       var.equal = TRUE)
+```
+
+연령의 집단차도 유의하지 않았다. 효과 크기는 아래와 같이 계산할 수 있다.
+
+```{r}
+# https://www.datanovia.com/en/lessons/t-test-effect-size-using-cohens-d-measure/
+cohens_d(data = demo,
+         Age ~ Group,
+         var.equal = TRUE,
+         hedges.correction = TRUE)
+# 표본크기가 50보다 작으면 hedge's corrected version (Hedges and Olkin 1985)
+```
+
 
 
 

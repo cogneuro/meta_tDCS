@@ -11,7 +11,7 @@
 
 <meta name="author" content="Kwon, Hong, Eom, &amp; Yi (2022)" />
 
-<meta name="date" content="2022-01-24" />
+<meta name="date" content="2022-01-26" />
 
 <title>tDCS1</title>
 
@@ -347,7 +347,7 @@ div.tocify {
 <h1 class="title toc-ignore">tDCS1</h1>
 <h3 class="subtitle">Prefrontal tDCS Enhances Visual Metacognition</h3>
 <h4 class="author">Kwon, Hong, Eom, &amp; Yi (2022)</h4>
-<h4 class="date">2022-01-24</h4>
+<h4 class="date">2022-01-26</h4>
 
 </div>
 
@@ -363,7 +363,7 @@ pre code, pre, code {
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># for reproducibility</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, knitr, psych, ggpubr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(afex, emmeans)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(afex, emmeans, rstatix)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load_gh</span>(<span class="st">&quot;thomasp85/patchwork&quot;</span>, <span class="st">&quot;RLesur/klippy&quot;</span>, <span class="st">&quot;mitchelloharawild/icons&quot;</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;HmiscHelper.R&#39;</span>)</span>
@@ -1269,63 +1269,169 @@ pre code, pre, code {
 <hr />
 <p><br><br></p>
 </div>
-<div id="session-info" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Session Info</h1>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.1.2 (2021-11-01)</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: macOS Big Sur 10.16</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="do">## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] icons_0.2.0       klippy_0.0.0.9500 patchwork_1.1.1   emmeans_1.7.2    </span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] afex_1.0-1        lme4_1.1-27.1     Matrix_1.4-0      ggpubr_0.4.0     </span></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] psych_2.1.9       knitr_1.37        forcats_0.5.1     stringr_1.4.0    </span></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] dplyr_1.0.7       purrr_0.3.4       readr_2.1.1       tidyr_1.1.4      </span></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] tibble_3.1.6      ggplot2_3.3.5     tidyverse_1.3.1  </span></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] ggbeeswarm_0.6.0    TH.data_1.1-0       minqa_1.2.4        </span></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] colorspace_2.0-2    ggsignif_0.6.3      ellipsis_0.3.2     </span></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] estimability_1.3    fs_1.5.2            rstudioapi_0.13    </span></span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] farver_2.1.0        bit64_4.0.5         fansi_1.0.2        </span></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] mvtnorm_1.1-3       lubridate_1.8.0     xml2_1.3.3         </span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] codetools_0.2-18    splines_4.1.2       mnormt_2.0.2       </span></span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] jsonlite_1.7.3      nloptr_1.2.2.3      broom_0.7.11       </span></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dbplyr_2.1.1        compiler_4.1.2      httr_1.4.2         </span></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] backports_1.4.1     assertthat_0.2.1    fastmap_1.1.0      </span></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] cli_3.1.1           htmltools_0.5.2     tools_4.1.2        </span></span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] lmerTest_3.1-3      coda_0.19-4         gtable_0.3.0       </span></span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="do">## [34] glue_1.6.1          reshape2_1.4.4      rappdirs_0.3.3     </span></span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a><span class="do">## [37] Rcpp_1.0.8          carData_3.0-5       cellranger_1.1.0   </span></span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a><span class="do">## [40] jquerylib_0.1.4     vctrs_0.3.8         nlme_3.1-155       </span></span>
-<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a><span class="do">## [43] xfun_0.29           rvest_1.0.2         lifecycle_1.0.1    </span></span>
-<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a><span class="do">## [46] pacman_0.5.1        rstatix_0.7.0       MASS_7.3-55        </span></span>
-<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a><span class="do">## [49] zoo_1.8-9           scales_1.1.1        vroom_1.5.7        </span></span>
-<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a><span class="do">## [52] hms_1.1.1           parallel_4.1.2      sandwich_3.0-1     </span></span>
-<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a><span class="do">## [55] yaml_2.2.1          sass_0.4.0          stringi_1.7.6      </span></span>
-<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="do">## [58] highr_0.9           boot_1.3-28         rlang_0.4.12       </span></span>
-<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a><span class="do">## [61] pkgconfig_2.0.3     evaluate_0.14       lattice_0.20-45    </span></span>
-<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a><span class="do">## [64] labeling_0.4.2      bit_4.0.4           tidyselect_1.1.1   </span></span>
-<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a><span class="do">## [67] plyr_1.8.6          magrittr_2.0.1      R6_2.5.1           </span></span>
-<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a><span class="do">## [70] generics_0.1.1      multcomp_1.4-18     DBI_1.1.2          </span></span>
-<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a><span class="do">## [73] pillar_1.6.4        haven_2.4.3         withr_2.4.3        </span></span>
-<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a><span class="do">## [76] survival_3.2-13     abind_1.4-5         modelr_0.1.8       </span></span>
-<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a><span class="do">## [79] crayon_1.4.2        car_3.0-12          utf8_1.2.2         </span></span>
-<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a><span class="do">## [82] tmvnsim_1.0-2       tzdb_0.2.0          rmarkdown_2.11     </span></span>
-<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a><span class="do">## [85] grid_4.1.2          readxl_1.3.1        reprex_2.0.1       </span></span>
-<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a><span class="do">## [88] digest_0.6.29       xtable_1.8-4        numDeriv_2016.8-1.1</span></span>
-<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a><span class="do">## [91] munsell_0.5.0       beeswarm_0.4.0      vipor_0.4.5        </span></span>
-<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a><span class="do">## [94] bslib_0.3.1</span></span></code></pre></div>
+<div id="demographic-info" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Demographic Info</h1>
+<p>두 명을 제외하고 남은 참가자 30명의 집단별 연령과 성비를 분석한다.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;tDCS1_demographic.csv&#39;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demo)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   SN    Sex Group Age Excluded</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  1   Male  Real  25        0</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  7   Male  Real  25        0</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 10   Male  Real  24        0</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 23   Male  Real  27        0</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 27   Male  Real  28        0</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  4 Female  Real  22        0</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> demo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Excluded <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(demo<span class="sc">$</span>Group, demo<span class="sc">$</span>Sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">&#39;Group x Sex&#39;</span>)</span></code></pre></div>
+<table>
+<caption>Group x Sex</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Female</th>
+<th align="right">Male</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Real</td>
+<td align="right">11</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">Sham</td>
+<td align="right">7</td>
+<td align="right">7</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>demo <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">M =</span> <span class="fu">mean</span>(Age),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(Age)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">&#39;Group x Age&#39;</span>)</span></code></pre></div>
+<table>
+<caption>Group x Age</caption>
+<thead>
+<tr class="header">
+<th align="left">Group</th>
+<th align="right">M</th>
+<th align="right">SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Real</td>
+<td align="right">23.44</td>
+<td align="right">2.45</td>
+</tr>
+<tr class="even">
+<td align="left">Sham</td>
+<td align="right">23.86</td>
+<td align="right">2.57</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math inline">\(\chi^2\)</span>-검정에서 셀이 네 개이면 <em>p</em>가 작게 나와서 1종오류 가능성 높아지므로, 예이츠의 연속성 보정이 필요하다(<code>correct = TRUE</code>).</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 카이제곱 검정</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">table</span>(demo<span class="sc">$</span>Group, demo<span class="sc">$</span>Sex)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(t, <span class="at">correct =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  t
+## X-squared = 0.45201, df = 1, p-value = 0.5014</code></pre>
+<p>성별비의 집단차는 유의하지 않았다.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">data =</span> demo,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>       Age <span class="sc">~</span> Group, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">paired =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  Age by Group
+## t = -0.45782, df = 28, p-value = 0.6506
+## alternative hypothesis: true difference in means between group Real and group Sham is not equal to 0
+## 95 percent confidence interval:
+##  -2.297230  1.457945
+## sample estimates:
+## mean in group Real mean in group Sham 
+##           23.43750           23.85714</code></pre>
+<p>연령의 집단차도 유의하지 않았다. 효과 크기는 아래와 같이 계산할 수 있다.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.datanovia.com/en/lessons/t-test-effect-size-using-cohens-d-measure/</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cohens_d</span>(<span class="at">data =</span> demo,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         Age <span class="sc">~</span> Group,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">var.equal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">hedges.correction =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 7
+##   .y.   group1 group2 effsize    n1    n2 magnitude 
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;     
+## 1 Age   Real   Sham    -0.163    16    14 negligible</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 표본크기가 50보다 작으면 hedge&#39;s corrected version (Hedges and Olkin 1985)</span></span></code></pre></div>
+<p><br><br></p>
+<hr />
+<p><br><br></p>
+</div>
+<div id="session-info" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Session Info</h1>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.1.2 (2021-11-01)</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: macOS Big Sur 10.16</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="do">## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] icons_0.2.0       klippy_0.0.0.9500 patchwork_1.1.1   rstatix_0.7.0    </span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] emmeans_1.7.2     afex_1.0-1        lme4_1.1-27.1     Matrix_1.4-0     </span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] ggpubr_0.4.0      psych_2.1.9       knitr_1.37        forcats_0.5.1    </span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] stringr_1.4.0     dplyr_1.0.7       purrr_0.3.4       readr_2.1.1      </span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] tidyr_1.1.4       tibble_3.1.6      ggplot2_3.3.5     tidyverse_1.3.1  </span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] ggbeeswarm_0.6.0    TH.data_1.1-0       minqa_1.2.4        </span></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] colorspace_2.0-2    ggsignif_0.6.3      ellipsis_0.3.2     </span></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] estimability_1.3    fs_1.5.2            rstudioapi_0.13    </span></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] farver_2.1.0        bit64_4.0.5         fansi_1.0.2        </span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] mvtnorm_1.1-3       lubridate_1.8.0     xml2_1.3.3         </span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] codetools_0.2-18    splines_4.1.2       mnormt_2.0.2       </span></span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] jsonlite_1.7.3      nloptr_1.2.2.3      broom_0.7.11       </span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dbplyr_2.1.1        compiler_4.1.2      httr_1.4.2         </span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] backports_1.4.1     assertthat_0.2.1    fastmap_1.1.0      </span></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] cli_3.1.1           htmltools_0.5.2     tools_4.1.2        </span></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] lmerTest_3.1-3      coda_0.19-4         gtable_0.3.0       </span></span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a><span class="do">## [34] glue_1.6.1          reshape2_1.4.4      rappdirs_0.3.3     </span></span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a><span class="do">## [37] Rcpp_1.0.8          carData_3.0-5       cellranger_1.1.0   </span></span>
+<span id="cb42-37"><a href="#cb42-37" aria-hidden="true" tabindex="-1"></a><span class="do">## [40] jquerylib_0.1.4     vctrs_0.3.8         nlme_3.1-155       </span></span>
+<span id="cb42-38"><a href="#cb42-38" aria-hidden="true" tabindex="-1"></a><span class="do">## [43] xfun_0.29           rvest_1.0.2         lifecycle_1.0.1    </span></span>
+<span id="cb42-39"><a href="#cb42-39" aria-hidden="true" tabindex="-1"></a><span class="do">## [46] pacman_0.5.1        MASS_7.3-55         zoo_1.8-9          </span></span>
+<span id="cb42-40"><a href="#cb42-40" aria-hidden="true" tabindex="-1"></a><span class="do">## [49] scales_1.1.1        vroom_1.5.7         hms_1.1.1          </span></span>
+<span id="cb42-41"><a href="#cb42-41" aria-hidden="true" tabindex="-1"></a><span class="do">## [52] parallel_4.1.2      sandwich_3.0-1      yaml_2.2.1         </span></span>
+<span id="cb42-42"><a href="#cb42-42" aria-hidden="true" tabindex="-1"></a><span class="do">## [55] sass_0.4.0          stringi_1.7.6       highr_0.9          </span></span>
+<span id="cb42-43"><a href="#cb42-43" aria-hidden="true" tabindex="-1"></a><span class="do">## [58] boot_1.3-28         rlang_0.4.12        pkgconfig_2.0.3    </span></span>
+<span id="cb42-44"><a href="#cb42-44" aria-hidden="true" tabindex="-1"></a><span class="do">## [61] evaluate_0.14       lattice_0.20-45     labeling_0.4.2     </span></span>
+<span id="cb42-45"><a href="#cb42-45" aria-hidden="true" tabindex="-1"></a><span class="do">## [64] bit_4.0.4           tidyselect_1.1.1    plyr_1.8.6         </span></span>
+<span id="cb42-46"><a href="#cb42-46" aria-hidden="true" tabindex="-1"></a><span class="do">## [67] magrittr_2.0.1      R6_2.5.1            generics_0.1.1     </span></span>
+<span id="cb42-47"><a href="#cb42-47" aria-hidden="true" tabindex="-1"></a><span class="do">## [70] multcomp_1.4-18     DBI_1.1.2           pillar_1.6.4       </span></span>
+<span id="cb42-48"><a href="#cb42-48" aria-hidden="true" tabindex="-1"></a><span class="do">## [73] haven_2.4.3         withr_2.4.3         survival_3.2-13    </span></span>
+<span id="cb42-49"><a href="#cb42-49" aria-hidden="true" tabindex="-1"></a><span class="do">## [76] abind_1.4-5         modelr_0.1.8        crayon_1.4.2       </span></span>
+<span id="cb42-50"><a href="#cb42-50" aria-hidden="true" tabindex="-1"></a><span class="do">## [79] car_3.0-12          utf8_1.2.2          tmvnsim_1.0-2      </span></span>
+<span id="cb42-51"><a href="#cb42-51" aria-hidden="true" tabindex="-1"></a><span class="do">## [82] tzdb_0.2.0          rmarkdown_2.11      grid_4.1.2         </span></span>
+<span id="cb42-52"><a href="#cb42-52" aria-hidden="true" tabindex="-1"></a><span class="do">## [85] readxl_1.3.1        reprex_2.0.1        digest_0.6.29      </span></span>
+<span id="cb42-53"><a href="#cb42-53" aria-hidden="true" tabindex="-1"></a><span class="do">## [88] xtable_1.8-4        numDeriv_2016.8-1.1 munsell_0.5.0      </span></span>
+<span id="cb42-54"><a href="#cb42-54" aria-hidden="true" tabindex="-1"></a><span class="do">## [91] beeswarm_0.4.0      vipor_0.4.5         bslib_0.3.1</span></span></code></pre></div>
 <hr />
 <p><span style="float:right"><a href="https://github.com/cogneuro/meta_tDCS">View on Github <svg viewBox="0 0 480 512" style="position:relative;display:inline-block;top:.1em;fill:#56B4E9;height:4em;" xmlns="http://www.w3.org/2000/svg"> <path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"></path></svg></a></span></p>
 </div>
